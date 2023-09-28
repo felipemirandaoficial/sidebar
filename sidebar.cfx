@@ -1,0 +1,356 @@
+
+
+<div id='menuid'>
+	<ul class="menu2">
+		  <li title="menu"><a href="#" class="close-all-submenus menu2-button fas fa-bars">Menu</a></li>
+		  <li title="Compras"><a href="#" class="close-all-submenus menucomp-button fa-solid fa-briefcase">Compras</a></li>
+		  <li title="Financeiro"><a href="#" class="close-all-submenus menufin-button fas fa-chart-line">Financeiro</a></li>
+		  <li title="Contabilidade"><a href="#" class="close-all-submenus menucont-button fas fa-calculator">Contabilidade</a></li>
+		  <li title="RH"><a href="#" class="close-all-submenus menu2rh-button fas fa-users">RH</a></li>
+		  <li title="Expediçao"><a href="#" class="close-all-submenus menuexp-button fa fa-truck ">Expedicao</a></li>
+		  <li title="Gestão Fazendas"><a href="#" class="close-all-submenus menuflo-button fa fa-tree">Ambiental / Fazendas</a></li>
+	</ul>
+    
+    <ul style='min-width: 300px;overflow-y: scroll;' class="menu2-bar" >
+		<li><a href="">Opções</a></li>
+		<li><a href="/">Pagina Inicial</a></li>
+		<li><a href="/crachas/usuarios.php">Minha Conta</a></li>
+		<li><a href="/trocarsenha.php">Trocar Senha</a></li>
+		<li><a href="/logoff.php">Sair</a></li>
+		
+	</ul>
+	<div id='scrollable-list'>
+		<ul id='menu2-bar_comp' class="menu2-bar_comp">
+			<li><a href="#" id='menu2comp-button' class="menu2comp-button">Compras</a></li>
+			
+			
+			<li><a id='' class='has-submenu' href="#">Solicitar Material</a></li>
+			
+			<li><a id='' class='has-submenu' href="#">Ver Solicitações</a></li>
+			
+			<li><a id='' href="/almox/solicitar_os.php">Solicitar OS</a></li>
+			
+			<li><a id='' href="/consulta_pd.php">Buscar Pedido</a></li>
+			<li><a id='' href="/consulta_api.php">Buscar OC</a></li>
+			
+			<li><a id='' href="/financeiro/consulta_cte.php">Buscar CTE</a></li>
+			<li><a id='' href="/rm/req.php">Visualizar RM</a></li>
+			
+			<li><a id='' href="/auth_pedidos/">Autorizar Pedido</a></li>
+			
+			<li><a id='' href="/auth_compras/">Modulo de Compras</a></li>
+			
+			<li><a id='' href="/auth_diretoria/">Ordens pedentes</a></li>
+			
+			<li><a id='' href="/almox.php">Gestão Almox</a></li>
+
+		</ul>
+	</div>
+	
+	<div class="sidebar">
+		<ul class="submenu">
+		  <li><a href="/fazer.php">Simasul</a></li>
+		  <li><a href="/fazer_delta.php">Transdelta</a></li>
+		  <li><a href="/fazer_posto.php">Asa Branca</a></li>
+		</ul>
+	</div>
+	
+	<div class="sidebar">
+		<ul class="submenu">
+		  <li><a href="/almox_esc_ab.php">Todas</a></li>
+		  <li><a href="/almox/abertos_req.php?db=celke&auth=6a875be61f7253d8787ebb669e0ca8219493ea109b6252475f8f6d882f451b61">Solicitações Simasul</a></li>
+		  <li><a href="/almox/abertos_req.php?db=delta&auth=5fb4016b1fb1e3fea2002108c15b23c7ad5dd1c3158bf7412e52659895aaadae">Solicitações Transdelta</a></li>
+		  <li><a href="/almox/abertos_req.php?db=posto&auth=a7fdf6569f8d26b8e860321efb5ff3244d7fbc158fd645a14eea2bd66c003742">Solicitações Asa Branca</a></li>
+		</ul>
+	</div>
+
+	<script>
+	 document.addEventListener('DOMContentLoaded', () => {
+    const hasSubmenus = document.querySelectorAll('.has-submenu');
+    const submenus = document.querySelectorAll('.submenu');
+    let isOpen = false;
+    let isMouseOverSubmenu = false;
+    let submenuTimeout; // Variável para armazenar o timeout
+    let currentSubmenu = null; // Rastreia o submenu atualmente aberto
+
+    const closeAllSubmenus = () => {
+        submenus.forEach((submenu) => {
+            submenu.classList.remove('active');
+        });
+        isOpen = false;
+        currentSubmenu = null;
+    };
+
+    hasSubmenus.forEach((button, index) => {
+        const submenu = submenus[index];
+
+        button.addEventListener('mouseenter', () => {
+            const top = button.offsetTop;
+
+            // Fecha todos os submenus abertos antes de abrir o novo submenu
+            closeAllSubmenus();
+
+            if (window.innerWidth <= 768) {
+                submenu.style.top = '200px'; // Define o top como 100px para dispositivos móveis
+            } else {
+                submenu.style.top = top + 'px'; // Define o top com base na posição do botão
+            }
+
+            submenu.classList.add('active');
+            isOpen = true;
+            currentSubmenu = submenu;
+        });
+
+        // Adicione um ouvinte de evento 'blur' ao 'has-submenu'
+        button.addEventListener('blur', () => {
+            // Define um timeout para fechar o submenu após 1.5 segundos, a menos que o mouse esteja sobre ele
+            submenuTimeout = setTimeout(() => {
+                if (!isMouseOverSubmenu && isOpen) {
+                    submenu.classList.remove('active');
+                    isOpen = false;
+                    currentSubmenu = null;
+                }
+            }, 100);
+        });
+
+        submenu.addEventListener('mouseenter', () => {
+            isMouseOverSubmenu = true;
+            // Cancela o timeout se o mouse estiver sobre o submenu
+            if (submenuTimeout) {
+                clearTimeout(submenuTimeout);
+            }
+        });
+
+        submenu.addEventListener('mouseleave', () => {
+            isMouseOverSubmenu = false;
+        });
+
+        // Adicione um ouvinte de evento 'blur' ao submenu
+        submenu.addEventListener('blur', () => {
+            submenu.classList.remove('active');
+            isOpen = false;
+            currentSubmenu = null;
+        });
+    });
+	
+	// Adicione um evento de clique a um elemento que fecha todos os submenus
+    const closeButton = document.querySelector('.close-all-submenus');
+    if (closeButton) {
+        closeButton.addEventListener('click', () => {
+            closeAllSubmenus();
+        });
+    }
+
+    // Fecha todos os submenus quando o mouse sai da área dos submenus
+    submenus.forEach((submenu) => {
+        submenu.addEventListener('mouseleave', () => {
+            closeAllSubmenus();
+        });
+    });
+});
+	</script>
+	
+	<ul id='menu2-bar_fin' style='min-width: 300px;' class="menu2-bar_fin">
+        <li><a href="/financeiro/?auth=5ee90ff1c63e8b2740eef7b16e3d04a341c2cdfbef7dd9971ac06a325e838d83" id='menu2fin-button' class="menu2fin-button">Financeiro</a></li>
+		
+		<li><a href="/financeiro/fazer.php">Gerar Recibo</a></li>
+		<li><a href="/financeiro/criar_diaria.php">Gestão de Diarias</a></li>
+		
+		<li><a href="/financeiro/menu_cte.php">Controle de CTEs</a></li>
+		
+		<li><a href="/financeiro/consulta_pd.php">OC Aprovadas</a></li>
+		
+	</ul>
+	
+	<ul id='menu2-bar_cont' style='min-width: 300px;' class="menu2-bar_cont">
+	
+        <li><a href="/contabilidade/?auth=833a17cc1d7cc9529012f94a37b0559475c5a50d4a851161048af8bae7896891" id='menu2cont-button' class="menu2cont-button">Contabilidade</a></li>
+		<li><a href="/contabilidade/notas.php">Controle de NFe</a></li>
+		
+		<li><a href="/contabilidade/fazer.php?auth=833a17cc1d75c5a50d4a851161048af8bae7896891">Cadastro de Material</a></li>
+		<li><a href="/contabilidade/fazer_fn.php?auth=833a17cc1d7cc9529012f94a37b0559475c5a50d4a851161048af8bae7896891#">Cadastro de Fornecedor</a></li>
+		<li><a href="/contabilidade/esc_fn_mt.php?auth=833a17cc1d7c444c952902f94a37b0559475c5a50d4a851161048af8bae7896891">Consutar Solicitações</a></li>
+		
+		<li><a href="/contabilidade/abertos_nf.php?auth=cc96354bf818f9c774e">NF Pendentes</a></li>
+		<li><a href="/contabilidade/abertos_mat.php?auth=cc96354bf818f9c">Materiais Pendentes</a></li>
+		<li><a href="/contabilidade/abertos_pd.php?auth=22196354bf818f9c774e">Ordens Pendentes</a></li>
+		
+	</ul>
+	
+	<ul id='menu2-bar_rh' style='min-width: 300px;' class="menu2-bar_rh">
+        <li><a href="" class="menu2rh-button">RH</a></li>
+		<li><a href="/lista/?auth=f441cc3e30253badf0e618e1392d22905515ec08961079ec6fdb74dccde17d96">Lista de Presença</a></li>
+		<li><a href="/lista/rh/?">Controle de Faltas</a></li>
+		
+		<li><a href="/recepcao/?auth=509295db5abd3175a5564dbaf1faa30006819848240c0afa69f9fc11819b0657">Recepção e Portaria</a></li>
+		
+		<li><a href="/diretoria/?auth=cff987aa110cacf467885d9561bf0c2af22dd8d6e0457a9d2c433013ef47cf2f">Requisitar Diretoria</a></li>
+		
+	</ul>
+	
+	<div id='scrollable-list'>
+	<ul id='menu2-bar_exp' class="menu2-bar_exp">
+        <li><a href="/balanca/?auth=e029901e17c885f17bab95e5e19f99057f24decc76d755a99f1732202881cd6c" class="menu2exp-button">Expedição / Balança</a></li>
+		<li><a href="/balanca/a1.php?">Relatorio de Produtos</a></li>
+		<li><a href="/balanca/relatorios.php?">Gerar Relatorio</a></li>
+		
+		<li><a href="/balanca/fretes.php">Cadastrar Motorista</a></li>
+		<li><a href="/balanca/fretes.php">Editar Motorista</a></li>
+		<li><a href="/balanca/fretes.php">Cadastrar Fornecedor</a></li>
+		
+		<li><a href="/balanca/cad_frete.php?">Cadastro de Frete</a></li>
+		<li><a href="/balanca/cad_fila.php?">Cadastro de Chegada</a></li>
+		
+		<li><a href="/balanca/fretes.php">Controle de Fretes</a></li>
+		<li><a href="/balanca/controle_motoristas.php">Ordem de Chegada</a></li>
+		
+	</ul>
+	</div>
+	
+	<ul id='menu2-bar_exp' style='min-width: 300px;' class="menu2-bar_flo">
+        <li><a href="" class="menu2flo-button">Fazendas / Florestal</a></li>
+		<li><a href="/fazendas/?auth=d6e004d06e6164ffc4c4f53025beafb652a89845c44a8b4aac84b220e9f78db7">Controle de Combustiveis</a></li>
+		<li><a href="/meioambiente/gerencia.php">Controle Ambiental</a></li>
+	</ul>
+
+<script src="/js/jquery-2.2.2.js"></script>
+
+<script>
+$(document).ready(function() {
+  // JavaScript para adicionar e remover a classe "active" nos itens do submenu
+  $('.has-submenu').click(function() {
+    $(this).toggleClass('active');
+  });
+
+  // Feche a barra lateral quando clicar em qualquer lugar fora dela
+  $(document).click(function(event) {
+    if (!$(event.target).closest('.sidebar').length) {
+      $('.has-submenu').removeClass('active');
+    }
+  });
+});
+
+var open_compras=false; 
+let open_fin,open_exp,open_flo,open_menu=false; 
+let open_rh=false; 
+let open_cont=false;
+
+function Desactived(){
+	//Financeiro
+	if(open_fin == true){
+		open_fin = false;
+		$(".menu2-bar_fin").removeClass( "open" );
+	}
+	//Menu
+	if(open_menu == true){
+		open_menu = false;
+		$(".menu2-bar").removeClass( "open" );
+	}
+	//Compras
+	if(open_compras == true){
+		open_compras = false;
+		$(".menu2-bar_comp").removeClass( "open" );
+	}
+	//Contabilidade
+	if(open_cont == true){
+		open_cont = false;
+		$(".menu2-bar_cont").removeClass( "open" );
+	}
+	//RH
+	if(open_rh == true){
+		open_rh = false;
+		$(".menu2-bar_rh").removeClass( "open" );
+	}
+	//EXP
+	if(open_exp == true){
+		open_exp = false;
+		$(".menu2-bar_exp").removeClass( "open" );
+	}
+	
+	//Florestal
+	if(open_flo == true){
+		open_flo = false;
+		$(".menu2-bar_flo").removeClass( "open" );
+	}
+	
+}
+
+//Menu
+$(document).ready(function(){
+	$(".menu2-button").click(function(){
+		if(open_compras == true || open_fin == true || open_cont == true || open_rh == true || open_exp == true || open_flo == true){
+			Desactived()
+		}
+		$(".menu2-bar").toggleClass( "open" );
+		open_menu = !open_menu;
+	})
+})
+
+//Compras
+$(document).ready(function(){
+	$(".menucomp-button").click(function(){
+		if(open_menu == true || open_fin == true || open_cont == true  || open_rh == true || open_exp == true || open_flo == true){
+			Desactived()
+		}
+		$(".menu2-bar_comp").toggleClass( "open" );
+		open_compras = !open_compras;
+	})
+})
+
+
+//FIN
+$(document).ready(function(){
+	$(".menufin-button").click(function(){
+		if(open_menu == true || open_compras == true || open_cont == true || open_rh == true || open_exp == true || open_flo == true){
+			Desactived()
+		}
+		$(".menu2-bar_fin").toggleClass( "open" );
+		open_fin = !open_fin;
+	})
+})
+
+//CONT
+$(document).ready(function(){
+	$(".menucont-button").click(function(){
+		if(open_menu == true || open_compras == true || open_fin == true  || open_rh == true || open_exp == true || open_flo == true){
+			Desactived()
+		}
+		$(".menu2-bar_cont").toggleClass( "open" );
+		open_cont = !open_cont;
+	})
+})
+
+//RH
+$(document).ready(function(){
+	$(".menu2rh-button").click(function(){
+		if(open_menu == true || open_compras == true || open_fin == true || open_cont == true || open_exp == true || open_flo == true){
+			Desactived()
+		}
+		$(".menu2-bar_rh").toggleClass( "open" );
+		open_rh = !open_rh;
+	})
+})
+
+//EXP
+$(document).ready(function(){
+	$(".menuexp-button").click(function(){
+		if(open_menu == true || open_compras == true || open_fin == true || open_cont == true || open_rh == true || open_flo == true){
+			Desactived()
+		}
+		$(".menu2-bar_exp").toggleClass( "open" );
+		open_exp = !open_exp;
+	})
+})
+
+//Florestal
+$(document).ready(function(){
+	$(".menuflo-button").click(function(){
+		if(open_menu == true || open_compras == true || open_fin == true || open_cont == true || open_exp == true || open_rh == true){
+			Desactived()
+		}
+		$(".menu2-bar_flo").toggleClass( "open" );
+		open_flo = !open_flo;
+	})
+})
+</script>
+</div>
